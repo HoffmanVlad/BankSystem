@@ -8,17 +8,156 @@
         <div class="flex flex-col w-full lg:w-1/2 justify-center items-start pt-12 pb-24 px-6">
             <h1 class="font-bold text-4xl my-4">Banking System</h1>
             <p class="leading-normal mb-4">
-                This is an Example web application created using django.
-                You can find the sourse code on <a href="https://github.com/HoffmanVlad">GitHub</a>
+                 <a href="https://github.com/HoffmanVlad"></a>
             </p>
             <div>
+            {% if user.is_authenticated %}
+            {% else %}
             <a href="{% url 'accounts:user_registration' %}" class="bg-transparent hover:bg-gray-800 text-gray-800 hover:text-white rounded shadow hover:shadow-lg py-2 px-4 border border-gray-900 hover:border-transparent">Register</a>
+            {% endif %}
             <a href="https://github.com/HoffmanVlad" class="bg-transparent hover:bg-gray-800 text-gray-800 hover:text-white rounded shadow hover:shadow-lg py-2 px-4 border border-gray-900 hover:border-transparent">GitHub</a>
             </div>
         </div>
         <!--Right Col-->
         <div class="w-full lg:w-1/2 lg:py-6 text-center">
-            <h1 style="font-size: 12rem" class="font-black text-gray-800">$$$</h1>
+            <!-- <h1 style="font-size: 12rem" class="font-black text-gray-800">$$$</h1> -->
+        {% if user.is_authenticated %} 
+            <div class="cc">
+              <span class="chip"></span>
+              <span class="nubank-logo"></span>
+              <span class="cc-number">5555 9334 3764 9846</span>
+              <span class="cc-date expedition">08/25</span>
+              <span class="cc-name">{{ user.first_name }} {{ user.last_name}}</span>
+              <span class="cc-numbers">{{ user.balance }}$</span>
+            </div> 
         </div>
+        {% endif %}
     </div>
+    <style>
+            /*
+             * General o>
+             *
+             * ==================== */
+            * {
+              box-sizing: border-box;
+              font-family: 'Consolas', monospace;
+              font-size: 14px;
+            }
+            
+            
+            h1 {
+              font-size: 60px;
+              font-weight: normal;
+            }
+            
+            .cc,
+            .cc-back {
+              background: linear-gradient(to left, #2600ff, #500075);
+              background-color: #6e2b77;
+              border-radius: 10px;
+              display: block;
+              height: 195px;
+              letter-spacing: .1rem;
+              margin: 20px;
+              position: relative;
+              text-align: left;
+              text-transform: uppercase;
+              width: 325px;
+            }
+            
+            .chip {
+              background: #efb77f;
+              border-radius: 5px;
+              display: block;
+              height: 30px;
+              left: 30px;
+              position: absolute;
+              top: 50px;
+              width: 40px;
+            }
+            
+            .nubank-logo {
+              background-position: 50% 50%;
+              background-repeat: no-repeat;
+              background-size: 80px;
+              display: block;
+              filter: grayscale(100%);
+            }
+            .nubank-logo:after {
+              background: linear-gradient(rgb(255, 0, 0), rgb(255, 92, 92));
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              content: 'Platinum';
+              display: block;
+              text-align: center;
+              padding-top: 60px;
+            }
+            
+            .cc-number {
+              background: linear-gradient(#eee, #999);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              bottom: 75px;
+              font-size: 20px;
+              left: 37px;
+              position: absolute;
+            }
+            
+            .cc-date {
+              background: linear-gradient(#eee, #999);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              bottom: 40px;
+              left: 30px;
+              position: absolute;
+            }
+            
+            .cc-date.expiry {
+              left: 125px;
+            }
+            .cc-date.expiry:after {
+              -webkit-text-fill-color: #000000;
+              content: 'Valid thru';
+              font-size: 8px;
+              left: -30px;
+              position: absolute;
+              text-transform: none;
+              top: -10px;
+            }
+            
+            .cc-name {
+              background: linear-gradient(#eee, #999);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              bottom: 15px;
+              left: 30px;
+              position: absolute;
+            }
+            
+            .cc-numbers {
+                background: linear-gradient(#eee, #999);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                bottom: 15px;
+                left: 220px;
+                position: absolute;
+              }
+            
+            /*
+             * Card back
+             */
+            .cc-magnet {
+              background-color: #c0c0c0;
+              display: block;
+              height: 30px;
+              position: absolute;
+              top: 15%;
+              width: 100%;
+            }
+            
+            /*
+             * MasterCard logo in pure CSS in just ONE element
+             * by Jaime Caballero (jaicab.com)
+             */
+    </style>
 {% endblock %}
