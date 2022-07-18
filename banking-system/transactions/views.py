@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from django.contrib import messages
@@ -5,8 +6,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, ListView
+from banking_system import settings
 
-from transactions.constants import DEPOSIT, WITHDRAWAL
+from transactions.constants import DEPOSIT, WITHDRAWAL, CREDITS
 from transactions.forms import (
     DepositForm,
     TransactionDateRangeForm,
@@ -132,3 +134,56 @@ class WithdrawMoneyView(TransactionCreateMixin):
         )
 
         return super().form_valid(form)
+
+class CreditMoneyView(TransactionCreateMixin):
+    form_class = DepositForm
+    title = 'Credit Money to Your Account'
+
+    def get_initial(self):
+        initial = {'transaction_type': CREDITS}
+        return initial
+
+    def form_valid(self, form):
+        amount = form.cleaned_data.get('amount')
+        account = self.request.user.account
+
+        if account.balance < 5000:
+            account.balance + 0
+            account.save(
+            update_fields=[
+                'initial_deposit_date',
+                'balance',
+                'interest_start_date'
+            ]
+        )
+            messages.success(
+            self.request,
+            f'You balance is not 5000$'
+        )
+        else:
+            account.balance += amount
+            account.save(
+            update_fields=[
+                'initial_deposit_date',
+                'balance',
+                'interest_start_date'
+            ]
+        )
+            messages.success(
+            self.request,
+            f'{amount}$ was credit to your account successfully'
+        )
+
+        if not account.initial_deposit_date:
+            now = timezone.now()
+            next_interest_month = int(
+                12 / account.account_type.interest_calculation_per_year
+            )
+            account.initial_deposit_date = now
+            account.interest_start_date = (
+                now + relativedelta(
+                    months=+next_interest_month
+                )
+            )
+        return super().form_valid(form)
+
